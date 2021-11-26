@@ -1,2 +1,5 @@
 # RequestFlooder
-Flood any type of requests to a URL using python (Threaded)
+Flood "GET" requests to a URL (Threaded)
+
+## Preview
+_soon_
